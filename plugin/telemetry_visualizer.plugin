@@ -1,0 +1,86 @@
+// About
+//
+name = "Telemetry Visualizer"
+description = "Telemetry Plug-in"
+version = "0.0.1"
+changelog = {
+    "0.0.1": "First version"
+}
+author = {
+    name = "Martin Engelbrektsson & Marcus Lilja"
+    email = "martin.christoffer.engelbrektsson@autodesk.com, marcus.lilja@autodesk.com"
+    company = "Autodesk Inc."
+    url = "https://git.autodesk.com/t-engem/exjobb-plugin"
+}
+keywords = ["stingray", "plugin", "example"]
+
+// Define plugin thumbnail
+//thumbnail = "sample_project/thumbnail.png"
+
+// Extensions
+//
+extensions = {
+    viewports = [
+        {
+            type = "telemetry-viewport"
+            engine = "telemetry_visualizer/telemetry_behavior.lua"
+            module = "telemetry-viewport.js"
+            simplified_controls = true
+        }
+    ]
+
+    views = [
+         { 
+            type = "panel"
+            name = "telemetry-viewer" 
+            path = "telemetry-viewer" 
+            title = "Telemetry Visualizer"
+            width = 725 
+            height = 800
+        }
+    ]
+    
+    menus = [
+        { 
+             path = "Window/Telemetry Visualizer" 
+             view = "telemetry-viewer"
+             order = 359 
+        }
+    ]
+
+    resources = [
+        { path = "telemetry_visualizer" }
+    ]
+
+    // Define a project template extension that will show up in the project manager.
+    templates = [
+        // { type = "project-template" path = "sample_project/sample.stingray_project" }
+    ]
+
+    // Define asset types that extend the asset browser.
+    asset_types = [
+		// { type = "my_type" category = "Custom" icon = "<icon_file.png>" }
+    ]
+	
+
+    // Load the engine extension in the editor engine instance.
+    runtime_libraries = [
+        {
+            name = "telemetry_visualizer"
+            paths = {
+                win32 = {
+                    dev = "binaries/engine/win64/dev/engine_plugin_w64_dev.dll"
+                    debug = "binaries/engine/win64/debug/engine_plugin_w64_debug.dll"
+                    release = "binaries/engine/win64/release/engine_plugin_w64_release.dll"
+                }
+            }
+        }
+    ]
+}
+
+// Dependencies
+//
+platforms = ["win64"]
+dependencies = {
+    "stingray" = "~1.9.0"
+}
