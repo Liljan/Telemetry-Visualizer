@@ -27,5 +27,5 @@ Notes for usage:
 * This plug-in supports several position parsers. Currently positions can be parsed from strings as "Vector3(x,y,z)" or "Position(x,y,z)". This can be extended by following instructions in the source code.
 * If the position attribute is not a valid field the visualization is not shown
 * The color scale uses three colors. *Min*: red, *Desired*: black, *Max*: green
-* If the scalar attrubute is not set to a valid scalar type (such as number) the visualization color is set to purple
+* If the scalar attrubute is not set to a valid scalar type (such as number) the visualization color is set to light green
 
