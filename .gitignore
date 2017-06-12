@@ -1,7 +1,7 @@
 # Build System downloads and generated folders
 stingray_sdk/
 build/
-cmake/
+#cmake/
 tools/hot-reload-post-link.bat
 plugin/sample_project/.stingray-asset-server-directory
 
@@ -25,7 +25,7 @@ assets/
 *.app
 *.aps
 *.diff
-*.dll
+#*.dll
 *.dylib
 *.exe
 *.fxo

@@ -1,0 +1,29 @@
+source-templates = {
+	default = {
+		type = "url"
+	}
+}
+
+packages = {
+
+	/** TODO: Put your external packages here
+
+	my-external-package = {
+		groups = ["engine"]
+		platforms = ["win64"]
+		lib = "my-external-package-1.0.42"
+		url = "https://somesite.net/my-external-package.zip"
+		version = "<anything>"
+	}
+
+	*/
+
+	// Build system packages
+
+	cmake = {
+		groups = ["plugin", "cmake", "common"]
+		lib = "cmake-3.7.0.rc3"
+		url = "https://draoqiiudbn5q.cloudfront.net/stingray-libs/cmake-3.7.0.rc3.zip"
+		version = "UfQV0Mx2bMvOpW7rQ4AE868lzAtPqP5g"
+	}
+}
