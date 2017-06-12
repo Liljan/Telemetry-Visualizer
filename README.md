@@ -2,7 +2,7 @@
 
 A data-driven telemetry visualization plug-in for Stingray. Developed by [Marcus Lilja](https://github.com/Liljan) and [Martin Engelbrektsson](https://github.com/Jingelman) as master thesis at Autodesk.
 
-The Visual Studio project files were made with Visual Studio 2015 and compiled with the 2017 C++ compiler.
+The Visual Studio project files were made with Visual Studio 2015 and compiled with the 2015 C++ compiler. The plug-in uses the MongoDB C driver to communicate with a MongoDB database. 
 
 Installation:
 
@@ -15,6 +15,9 @@ Installation:
 
 Usage:
 
-* First
-* Second
-* Third
+* Connect to an address and enter database name.
+* (Optional: Load a Stingray level.)
+* Select from which collection to fetch data from.
+* Select what data fields to include in visualization.
+* Select which documents to include in visualization.
+* Select visualization type and match visualization properties with a suitable data field.
