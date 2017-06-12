@@ -100,22 +100,22 @@ define(function (require) {
 
             this.setMode = (option) => {
                 switch (option) {
-                    case Parsers.VECTOR3:
+                    case Parsers.POSITION:
                         this.selectedMode = Parsers.VECTOR3;
                         this.positionParserAccordion = null;
                         break;
-                    case Parsers.POSITION:
+                    case Parsers.VECTOR3:
                         this.selectedMode = Parsers.POSITION;
-                        this.levelKey = m.prop("city_wall");
+                        this.levelKey = m.prop("level_key");
 
                         this.positionParserAccordion = Accordion.component([{
-                            title: "Vector3(x, y, z)",
+                            title: "Level key",
                             content: () => {
                                 return [
                                     Toolbar.component({
                                         items: [
                                             { component: "Level key" },
-                                            { component: Textbox.component({ model: this.levelKey, placeholder: "city_wall" }) },
+                                            { component: Textbox.component({ model: this.levelKey, placeholder: "level_key" }) },
                                         ]
                                     })
                                 ];
@@ -131,7 +131,7 @@ define(function (require) {
                 }
             }
 
-            this.selectModeModel = m.helper.modelWithTransformer(m.prop(1), null, (viewStrValue) => {
+            this.selectModeModel = m.helper.modelWithTransformer(m.prop(0), null, (viewStrValue) => {
                 let parsed = parseInt(viewStrValue);
 
                 this.setMode(parsed);
