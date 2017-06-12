@@ -20,8 +20,8 @@ function TelemetryEditorViewportBehavior:init(id, editor, window)
     self._fields =  {}
     self._visualization_modes = { NON = 1, POINTCLOUD = 2, POINTCLOUD_COLOR = 3 }
     self._visualization_mode = self._visualization_modes.NON --Default mode
-    self._parser_modes = { DEFAULT = 0, VECTOR3 = 1, POSITION = 2 }
-    self._parser_mode = self._parser_modes.DEFAULT
+    self._parser_modes = { NON = 0, VECTOR3 = 1, POSITION = 2 }
+    self._parser_mode = self._parser_modes.NON
 
     if self._window then
         -- Required by EditorViewport
@@ -69,13 +69,13 @@ local function special_string_to_vec3(positions)
         local position = string.sub(positions[i], string.len("Vector3(") + 1)
 
         local x = string.find(position, ",")
-        if(x ~= nil) then
+        if x ~= nil  then
             val1 = string.sub(position, 0, x - 1)
             position = string.sub(position, string.len(val1) + string.len(", ") + 1)
         end        
 
         local y = string.find(position, ",")
-        if(y ~= nil) then
+        if y ~= nil  then
             val2 = string.sub(position, 0, y - 1)
             position = string.sub(position, string.len(val2) + string.len(", ") + 1)
         end
@@ -84,7 +84,7 @@ local function special_string_to_vec3(positions)
         
         val1_num, val2_num, val3_num = tonumber(val1), tonumber(val2), tonumber(val3) 
 
-        if(type(val1_num) == "nil" or type(val2_num) == "nil" or type(val3_num) == "nil") then
+        if type(val1_num) == "nil" or type(val2_num) == "nil" or type(val3_num) == "nil"  then
             result[i] = nil
         else
             result[i] = Vector3(val1_num, val2_num, val3_num)
@@ -107,13 +107,13 @@ local function testdb_string_to_vec3(positions)
         local position = string.sub(positions[i], string.len("position(") + 2)
 
         local x = string.find(position, ",")
-        if(x ~= nil) then
+        if x ~= nil  then
             val1 = string.sub(position, 0, x - 1)
             position = string.sub(position, string.len(val1) + string.len(", ") + 1)
         end
         
         local y = string.find(position, ",")
-        if(y ~= nil) then
+        if y ~= nil  then
             val2 = string.sub(position, 0, y - 1)
             position = string.sub(position, string.len(val2) + string.len(", ") + 1)
         end
@@ -122,7 +122,7 @@ local function testdb_string_to_vec3(positions)
 
         val1_num, val2_num, val3_num = tonumber(val1), tonumber(val2), tonumber(val3) 
 
-        if(type(val1_num) == "nil" or type(val2_num) == "nil" or type(val3_num) == "nil") then
+        if type(val1_num) == "nil" or type(val2_num) == "nil" or type(val3_num) == "nil" then
             result[i] = nil
         else
             result[i] = Vector3(val1_num, val2_num, val3_num)
@@ -178,7 +178,7 @@ local function render_point_cloud(lines, fields, data_mode)
     for i=1, #positions do
         local position = positions[i]
 
-        if(position ~= nil) then
+        if position ~= nil then
             LineObject.add_box(lines, Color(alpha, color_value, color_value, color_value), Matrix4x4.from_translation(position), Vector3(1.0,1.0,1.0))
         end
     end    
@@ -200,21 +200,18 @@ local function render_point_cloud_scale(lines, fields, data_mode)
     for i=1, #positions do
         local position = positions[i]
 
-        if(position ~= nil) then
+        if position ~= nil then
             local scalar_value = scalars[i]
-
-            if(type(scalar_value) == "nil" or type(scalar_value) ~= "number") then
-                color_value_default, scalar_value = 125, 255
-            end
-
             local color_scale_value
 
-            if(scalar_value > fields.desired_min) then
+            if type(scalar_value) == "nil" or type(scalar_value) ~= "number" then
+                color_value_default, color_scale_value = 125, 125
+            elseif scalar_value > fields.desired_min then 
                 color_scale_value = 255*((scalar_value - fields.desired_min) / (fields.max - fields.desired_min)) --Normalize values between 0 and 255
                 LineObject.add_box(lines, Color(alpha, color_value_default, color_scale_value, color_value_default), Matrix4x4.from_translation(position), Vector3(1.0, 1.0, 1.0)) --red to black color scale
-            else
+            elseif scalar_value < fields.desired_min then 
                 color_scale_value = 255 - 255*((scalar_value - fields.min) / (fields.desired_min - fields.min)) --Normalize values between 255 and 0
-                LineObject.add_box(lines, Color(alpha, color_scale_value, color_value_default, color_value_default), Matrix4x4.from_translation(position), Vector3(1.0, 1.0, 1.0)) --black to green color scale
+                LineObject.add_box(lines, Color(alpha, color_scale_value, color_value_default, color_value_default), Matrix4x4.from_translation(position), Vector3(1.0, 1.0, 1.0)) --red to black color scale
             end
         end
     end
@@ -396,7 +393,7 @@ function TelemetryEditorViewportBehavior:visualize_point_cloud(parser_mode, posi
     end
 
     if parser_mode == 0 then
-        self._parser_mode = self._parser_modes.DEFAULT
+        self._parser_mode = self._parser_modes.NON
     elseif parser_mode == 1 then
         self._parser_mode = self._parser_modes.VECTOR3
     elseif parser_mode == 2 then

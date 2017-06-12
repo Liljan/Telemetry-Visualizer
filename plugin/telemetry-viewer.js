@@ -143,7 +143,7 @@ define(function (require) {
                 return {
                     'Default': Parsers.NO_PARSER,
                     'Position(x, y, z)': Parsers.POSITION,
-                    'Vector3(x, y, z)': Parsers.VECTOR3,
+                    'Vector3(x, y, z) (special database fetch)': Parsers.VECTOR3,
                     // more options can be added here
                 };
             };
