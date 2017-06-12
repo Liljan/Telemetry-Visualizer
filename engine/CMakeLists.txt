@@ -6,10 +6,10 @@ set(ENGINE_PLUGIN ON)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${REPOSITORY_DIR}/cmake")
 include(CMakePlugin)
 
-# Scan and add project source files.
+# Scan and add project source files
 find_source_files(ALL_SOURCE_FILES)
 
-# Add windows version resource if windows dll.
+# Add windows version resource if windows dll
 if( PLATFORM_WINDOWS )
 	if( BUILD_SHARED_LIBS )
 		include_directories(${PROJECT_SOURCE_DIR})
@@ -28,14 +28,6 @@ include_directories(${REPOSITORY_DIR}/stingray_sdk)
 
 # Create target and set compile/link options
 add_library(${PROJECT_NAME} ${ALL_SOURCE_FILES})
-
-# Require Mongo package dependency.
-find_package(Mongo REQUIRED)
-add_compile_options(${MONGO_DEFINITIONS})
-include_directories(${MONGO_INCLUDE_DIRS})
-# install(FILES ${MONGO_BINARIES} DESTINATION "${ENGINE_PLUGINS_INSTALL_DIR}")
-# install(DIRECTORY  ${MONGO_BINARIE_DIR} DESTINATION "${ENGINE_PLUGINS_INSTALL_DIR}")
-target_link_libraries(${PROJECT_NAME} ${MONGO_LIBRARIES})
 
 # Set target properties
 set_system_properties(${PROJECT_NAME})

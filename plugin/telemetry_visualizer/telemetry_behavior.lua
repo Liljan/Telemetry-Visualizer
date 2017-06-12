@@ -20,8 +20,8 @@ function TelemetryEditorViewportBehavior:init(id, editor, window)
     self._fields =  {}
     self._visualization_modes = { NON = 1, POINTCLOUD = 2, POINTCLOUD_COLOR = 3 }
     self._visualization_mode = self._visualization_modes.NON --Default mode
-    self._data_modes = { DEFAULT = 0, MODE_1 = 1, MODE_2 = 2 }
-    self._data_mode = self._data_modes.DEFAULT
+    self._parser_modes = { DEFAULT = 0, VECTOR3 = 1, POSITION = 2 }
+    self._parser_mode = self._parser_modes.DEFAULT
 
     if self._window then
         -- Required by EditorViewport
@@ -234,9 +234,9 @@ function TelemetryEditorViewportBehavior:render(editor_viewport, lines, lines_no
     World.clear_permanent_lines(self._world)
 
     if self._visualization_mode == self._visualization_modes.POINTCLOUD then
-        render_point_cloud(lines_no_z, self._fields, self._data_mode)
+        render_point_cloud(lines_no_z, self._fields, self._parser_mode)
     elseif self._visualization_mode == self._visualization_modes.POINTCLOUD_COLOR then
-        render_point_cloud_scale(lines_no_z, self._fields, self._data_mode)
+        render_point_cloud_scale(lines_no_z, self._fields, self._parser_mode)
     end
     
     LineObject.dispatch(self._world, lines)
@@ -396,11 +396,11 @@ function TelemetryEditorViewportBehavior:visualize_point_cloud(parser_mode, posi
     end
 
     if parser_mode == 0 then
-        self._data_mode = self._data_modes.DEFAULT
+        self._parser_mode = self._parser_modes.DEFAULT
     elseif parser_mode == 1 then
-        self._data_mode = self._data_modes.MODE_1
+        self._parser_mode = self._parser_modes.VECTOR3
     elseif parser_mode == 2 then
-        self._data_mode = self._data_modes.MODE_2
+        self._parser_mode = self._parser_modes.POSITION
     end
 end
 

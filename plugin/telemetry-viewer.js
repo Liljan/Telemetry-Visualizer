@@ -24,7 +24,7 @@ define(function (require) {
 
     const DEFAULT_IP = 'localhost';
     const DEFAULT_PORT = '27017';
-    const DEFAULT_DB = 'telemetry_database';
+    const DEFAULT_DB = '';
     const DEFAULT_DLL_PATH = 'telemetry_visualizer/binaries/editor/win64/release/editor_plugin_w64_release.dll';
 
     const Visualizations = {
@@ -32,10 +32,11 @@ define(function (require) {
         // More visualization types can be added here.
     }
 
-    const Modes = {
-        MODE_1: 1,
-        MODE_2: 2,
-        // More modes can be added here.
+    const Parsers = {
+        NO_PARSER: 0, 
+        VECTOR3: 1,
+        POSITION: 2,
+        // More Parsers can be added here.
     }
 
     class TelemetryViewer {
@@ -49,7 +50,7 @@ define(function (require) {
             });
 
             // ---- DATABASE VARIABLES ----
-            this.selectedMode = Modes.MODE_1;
+            this.selectedMode = Parsers.VECTOR3;
             this.prefix = 'mongodb://';
 
             this.pluginId = this.loadNativeExtension();
@@ -70,9 +71,9 @@ define(function (require) {
                         return [Toolbar.component({
                             items: [
                                 { component: this.prefix },
-                                { component: Textbox.component({ model: this.ip, placeholder: "IP", clearable: true }) },
+                                { component: Textbox.component({ model: this.ip, placeholder: "IP number", clearable: true }) },
                                 { component: ":" },
-                                { component: Textbox.component({ model: this.port, placeholder: "Port", clearable: true }) },
+                                { component: Textbox.component({ model: this.port, placeholder: "Port number", clearable: true }) },
                                 { img: 'tab_close_normal.svg', title: 'Clear', action: () => { this.ip(''), this.port('') } },
                                 { img: 'undo.svg', title: 'Default', action: () => { this.ip(DEFAULT_IP), this.port(DEFAULT_PORT) } },
                                 { img: 'play.svg', title: 'Connect', action: () => this.connect() }
@@ -81,7 +82,7 @@ define(function (require) {
                         Toolbar.component({
                             items: [
                                 { component: "Database" },
-                                { component: Textbox.component({ model: this.dataBase, placeholder: "Database", clearable: true }) },
+                                { component: Textbox.component({ model: this.dataBase, placeholder: "Database name", clearable: true }) },
                                 { img: 'tab_close_normal.svg', title: 'Clear', action: () => { this.dataBase('') } },
                                 { img: 'undo.svg', title: 'Default', action: () => { this.dataBase(DEFAULT_DB) } },
                                 { img: 'play.svg', title: 'Connect', action: () => this.selectDatabase() }
@@ -91,24 +92,24 @@ define(function (require) {
                 }
             ]);
 
-            // ---- MODE_2 SPECIFIC VARIABLES ----
+            // ---- POSITION PARSER SPECIFIC VARIABLES ----
 
-            this.mode_2_Accordion = null;
+            this.POSITION_Accordion = null;
 
             // ---- PARSER MODE VARIABLES ----
 
             this.setMode = (option) => {
                 switch (option) {
-                    case Modes.MODE_1:
-                        this.selectedMode = Modes.MODE_1;
-                        this.mode_2_Accordion = null;
+                    case Parsers.VECTOR3:
+                        this.selectedMode = Parsers.VECTOR3;
+                        this.positionParserAccordion = null;
                         break;
-                    case Modes.MODE_2:
-                        this.selectedMode = Modes.MODE_2;
+                    case Parsers.POSITION:
+                        this.selectedMode = Parsers.POSITION;
                         this.levelKey = m.prop("city_wall");
 
-                        this.mode_2_Accordion = Accordion.component([{
-                            title: "Special Mode 1",
+                        this.positionParserAccordion = Accordion.component([{
+                            title: "Vector3(x, y, z)",
                             content: () => {
                                 return [
                                     Toolbar.component({
@@ -123,7 +124,10 @@ define(function (require) {
 
                         break;
 
-                    default: break;
+                    default: 
+                    this.selectedMode = Parsers.NO_PARSER;
+                    this.positionParserAccordion = null;
+                    break;
                 }
             }
 
@@ -137,20 +141,21 @@ define(function (require) {
 
             this.modeOptions = () => {
                 return {
-                    'Default': Modes.MODE_1,
-                    'Special mode': Modes.MODE_2,
+                    'Default': Parsers.NO_PARSER,
+                    'Position(x, y, z)': Parsers.POSITION,
+                    'Vector3(x, y, z)': Parsers.VECTOR3,
                     // more options can be added here
                 };
             };
 
             this.selectModeAccordion = Accordion.component(
                 [{
-                    title: "Select parser mode",
+                    title: "Parser for visualization attribute 'Position'",
                     collapsible: true,
                     content: () => {
                         return Toolbar.component({
                             items: [
-                                { component: "Parser mode: " },
+                                { component: "Parser: " },
                                 { component: Choice.component({ model: this.selectModeModel, getOptions: this.modeOptions }) }
                             ]
                         });
@@ -287,7 +292,7 @@ define(function (require) {
 
             this.fieldAccordion = Accordion.component([
                 {
-                    title: "Fields",
+                    title: "Fields to include",
                     isExpanded: true,
                     content: () => {
 
@@ -560,7 +565,7 @@ define(function (require) {
 
             let documents = null;
 
-            if (this.selectedMode == Modes.MODE_2) {
+            if (this.selectedMode == Parsers.POSITION) {
 
                 let tempSessionIDs = this.fetchSessions();
 
@@ -681,7 +686,7 @@ define(function (require) {
 
                                 this.databaseAccordion,
                                 this.selectModeAccordion,
-                                this.mode_2_Accordion,
+                                this.positionParserAccordion,
                                 this.levelAccordion,
                                 this.fieldAccordion,
                                 this.documentAccordion,

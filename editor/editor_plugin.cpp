@@ -227,7 +227,7 @@ namespace PLUGIN_NAMESPACE
 		BSON_APPEND_INT64(&opts, "limit", limit);
 		BSON_APPEND_INT64(&opts, "skip", skip);
 
-		// Modified solution for unique database
+		/* Temporay solution for unique database */
 		if (sessions_ids)
 		{
 			bson_t or_operand;
@@ -268,6 +268,7 @@ namespace PLUGIN_NAMESPACE
 			bson_destroy(&or_operand);
 			bson_destroy(&exist_field_value);
 		}
+		/* End of temporay solution for unique database */
 
 		BSON_APPEND_DOCUMENT_BEGIN(&opts, "sort", &sort);
 		for (auto i = 0; i < sort_fields.size(); ++i)
@@ -403,7 +404,7 @@ namespace PLUGIN_NAMESPACE
 		bson_init(&filter);
 		bson_init(&project_field);
 
-		// Temporary solution for unique database and the collection tech_performance
+		// Temporary solution for unique database and the collection tech_performance, to get all keys
 		if (strequal(collection_name, "tech_performance"))
 			BSON_APPEND_INT64(&opts, "skip", 6);
 
