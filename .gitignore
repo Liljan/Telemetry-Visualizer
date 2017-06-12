@@ -9,7 +9,7 @@ plugin/sample_project/.stingray-asset-server-directory
 
 Debug/
 Dev/
-Release/
+#Release/
 Shipping/
 GeneratedFiles/
 ipch/
